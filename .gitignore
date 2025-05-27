@@ -172,3 +172,20 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Model file
+models/
+asset/
+
+# Prompt
+prompts/prompt.txt
+
+# Compile internal
+_internal/
+ffprobe.exe
+ffmpeg.exe
+*.bat
+*.exe
+
+# static file
+static/
