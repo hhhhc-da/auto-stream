@@ -184,8 +184,6 @@ prompts/prompt.txt
 _internal/
 ffprobe.exe
 ffmpeg.exe
-*.bat
-*.exe
 
 # static file
 static/
