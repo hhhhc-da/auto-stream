@@ -9,3 +9,10 @@ torch
 ChatTTS
 scipy
 sounddevice
+scikit-learn
+tqdm
+transformers
+matplotlib
+matplotlib
+seaborn
+joblib
