@@ -1,0 +1,11 @@
+llama-cpp-python
+numpy
+pandas
+fastapi
+uvicorn
+websockets
+pydub
+torch
+ChatTTS
+scipy
+sounddevice

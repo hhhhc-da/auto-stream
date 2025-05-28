@@ -1,9 +1,36 @@
+#coding=utf-8
 import requests
 import os
 import random
 
 # 语音识别函数
-def voice_recognition(file_path=os.path.join("audio", random.choice(os.listdir('audio'))), url="http://127.0.0.1:9977/api", language="zh", model="tiny", response_format="json"):
+def voice_recognition(io_bytes, url="http://127.0.0.1:9977/api", language="zh", model="tiny", response_format="json"):
+    '''
+    文字转语音函数
+    '''
+    files = {
+        "file": io_bytes
+    }
+    
+    data = {
+        "language": language,
+        "model": model,
+        "response_format": response_format
+    }
+    response = requests.request("POST", url, timeout=600, data=data, files=files)
+    
+    # 检查响应状态码和内容
+    if response.status_code == 200:
+        result = response.json()
+        if result['code'] == 0:
+            return str(','.join([i['text'] for i in result['data']])).strip() + '。'
+        else:
+            raise Exception(f"Error: {result['msg']}")
+    else:
+        raise Exception(f"HTTP Error: {response.status_code} - {response.text}")
+
+# 语音识别函数
+def voice_recognition_from_file(file_path=os.path.join("audio", random.choice(os.listdir('audio'))), url="http://127.0.0.1:9977/api", language="zh", model="tiny", response_format="json"):
     '''
     文字转语音函数
     '''
