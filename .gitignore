@@ -184,6 +184,8 @@ prompts/prompt.txt
 _internal/
 ffprobe.exe
 ffmpeg.exe
+start.exe
 
 # static file
 static/
+templates/

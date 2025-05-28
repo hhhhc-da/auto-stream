@@ -1,1 +1,0 @@
-conda activate chat && python ds_server.py

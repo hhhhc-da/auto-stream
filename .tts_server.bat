@@ -1,1 +1,0 @@
-conda activate chat && python tts_server.py
