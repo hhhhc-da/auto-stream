@@ -21,7 +21,9 @@ pip install -r requirements.txt
 
 ### 系统介绍
 
-系统以网络传输为主要信息传递的方式进行信息传递
+系统以网络传输为主要信息传递的方式进行信息传递，下面是我们暂定的方案
+
+![image](./images/control.drawio.png)
 
 首先我们启动我们的后端服务（stt 服务、DeepSeek 服务）
 
