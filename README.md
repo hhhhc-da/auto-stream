@@ -51,6 +51,8 @@ python main.py
 
 打开我们的 Vtuber Studio 并且录制好动作，并绑定快捷键
 
+（注意：使用别人的模型时，一定注意查看许可授权，本项目使用的是开源免费的模型）
+
 ![image](./images/vtuber-studio.png)
 
 之后按照 obs 文档推流到 bilibili 服务器就可以了
