@@ -49,6 +49,10 @@ python main.py
 
 ![image](./images/valid1.png)
 
+同时和 bilibili 的弹幕交互是基于 blivechat 实现的，plugins 文件夹下有 blivechat 的开发测试，目前处于开发阶段
+
+![image](./images/plugin.png)
+
 ### 特别鸣谢
 
 ---
