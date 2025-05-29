@@ -49,6 +49,14 @@ python main.py
 
 ![image](./images/valid1.png)
 
+打开我们的 Vtuber Studio 并且录制好动作，并绑定快捷键
+
+![image](./images/vtuber-studio.png)
+
+之后按照 obs 文档推流到 bilibili 服务器就可以了
+
+![image](./images/obs.png)
+
 同时和 bilibili 的弹幕交互是基于 blivechat 实现的，plugins 文件夹下有 blivechat 的开发测试，目前处于开发阶段
 
 ![image](./images/plugin.png)
