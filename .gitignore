@@ -194,3 +194,6 @@ modules/bert-chinese/
 # weights
 *.pth
 *.pt
+
+# third-party
+blivechat/

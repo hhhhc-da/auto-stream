@@ -17,7 +17,15 @@ pip install -r requirements.txt
 
 之后我们要去下载一个大语言模型的 GGUF 文件, 并且放到 models 文件夹下, 在下载的 model 文件夹中有 stt 的 tiny 模型
 
-我使用的是 DeepSeek-R1-Distill-Qwen-1.5B-Q8_0.gguf，DeepSeek 1.5B 参数 Q8 量化版本, 然后就可以使用了
+我使用的是 DeepSeek-R1-Distill-Qwen-1.5B-Q8_0.gguf，DeepSeek 1.5B 参数 Q8 量化版本
+
+安装好弹幕管理器 blivechat，这个是 Windows x64 预编译版本，也可以使用源码编译
+
+```
+wget https://github.com/xfgryujk/blivechat/releases/download/v1.10.0/blivechat-1.10.0-windows-x64.zip
+```
+
+双击 blivechat.exe 即可，之后访问 http://localhost:12450/ 可以控制基础信息
 
 ### 系统介绍
 
@@ -60,3 +68,9 @@ https://github.com/2noise/ChatTTS
 大语言模型部署库 llama.cpp, 用于产生交互文本
 
 https://github.com/ggml-org/llama.cpp
+
+---
+
+bilibili 弹幕捕获程序, 同时可以推流到 OBS Studio
+
+https://github.com/xfgryujk/blivechat
