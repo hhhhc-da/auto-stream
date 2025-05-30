@@ -78,15 +78,18 @@ start.bat
 ### 特别鸣谢
 
 ```
-语音转文字项目 stt, 提供了高效的语音转文字功能
+# 语音转文字项目 stt, 提供了高效的语音转文字功能
 https://github.com/jianchang512/stt
 
-文本转语音项目 chattts, 提供了专业的文字转语音功能
+# 文本转语音项目 chattts, 提供了专业的文字转语音功能
 https://github.com/2noise/ChatTTS
 
-大语言模型部署库 llama.cpp, 用于产生交互文本
+# 大语言模型部署库 llama.cpp, 用于产生交互文本
 https://github.com/ggml-org/llama.cpp
 
-bilibili 弹幕捕获程序, 同时可以推流到 OBS Studio
+# bilibili 弹幕捕获程序, 同时可以推流到 OBS Studio
 https://github.com/xfgryujk/blivechat
+
+# 音色迁移项目，可以后续继续开发（稳定音色，同时可拓展唱歌）
+https://github.com/svc-develop-team/so-vits-svc
 ```
