@@ -45,19 +45,13 @@ wget https://github.com/xfgryujk/blivechat/releases/download/v1.10.0/blivechat-1
 
 ---
 
-首先我们启动我们的后端服务（stt 服务、DeepSeek 服务）
+首先我们启动我们的后端服务（后端控制服务、DeepSeek 服务、blivechat 服务、表情管理服务）
 
 ```
 start.bat
 ```
 
-之后我们启动主程序, 或者写一个前端页面用来给用户提供更友好的交互模式
-
-```
-python main.py
-```
-
-之后我们就可以看到有了下面的内容
+如果想要语音到语音模式，我们还提供了 record.py 来实现交互
 
 ![image](./images/valid1.png)
 
@@ -71,32 +65,28 @@ python main.py
 
 ![image](./images/obs.png)
 
-同时和 bilibili 的弹幕交互是基于 blivechat 实现的，plugins 文件夹下有 blivechat 的开发测试，目前处于开发阶段
+同时和 bilibili 的弹幕交互是基于 blivechat 实现的，plugins 文件夹下有 blivechat 的开发测试
 
-![image](./images/plugin.png)
+表情管理使用的是 Bert 分类模型，前往 dataset 可以查看具体内容
+
+建议在正式使用前重新训练一个表情管理，同时尽可能保证 Vtuber Studio 能正确捕获到按键输入
+
+使用 llama.cpp 部署 DeepSeek R1 7B 模型，编译时使用的是 CPU 版本，建议重新用 GPU 编译或者使用云服务
+
+视频太大了没有上传，后续会上传到 bilibili
 
 ### 特别鸣谢
 
----
-
+```
 语音转文字项目 stt, 提供了高效的语音转文字功能
-
 https://github.com/jianchang512/stt
 
----
-
 文本转语音项目 chattts, 提供了专业的文字转语音功能
-
 https://github.com/2noise/ChatTTS
 
----
-
 大语言模型部署库 llama.cpp, 用于产生交互文本
-
 https://github.com/ggml-org/llama.cpp
 
----
-
 bilibili 弹幕捕获程序, 同时可以推流到 OBS Studio
-
 https://github.com/xfgryujk/blivechat
+```
