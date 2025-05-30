@@ -73,7 +73,7 @@ start.bat
 
 使用 llama.cpp 部署 DeepSeek R1 7B 模型，编译时使用的是 CPU 版本，建议重新用 GPU 编译或者使用云服务
 
-视频太大了没有上传，后续会上传到 bilibili
+测试视频可查看 bilibili 链接：[自动化直播测试 https://www.bilibili.com/video/BV1UL7Wz3Eq8](https://www.bilibili.com/video/BV1UL7Wz3Eq8)
 
 ### 特别鸣谢
 
