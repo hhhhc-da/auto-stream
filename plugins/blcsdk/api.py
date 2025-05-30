@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
-os.environ['BLC_PORT'] = '12450'
-os.environ['BLC_TOKEN'] = 'FaeDaD7bCa7895F5b9afE509aAB0cAdB'
+# os.environ['BLC_PORT'] = '12450'
+# os.environ['BLC_TOKEN'] = 'A9120cdfc07455fFa7b3035c2A48dF4e'
 
 import asyncio
 import dataclasses
@@ -36,7 +36,7 @@ __all__ = (
 logger = logging.getLogger('blcsdk')
 
 # 环境变量
-_blc_port = 12450
+_blc_port = 0
 """服务器端口"""
 _blc_base_url = ''
 """HTTP API的URL"""

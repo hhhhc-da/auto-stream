@@ -33,6 +33,18 @@ wget https://github.com/xfgryujk/blivechat/releases/download/v1.10.0/blivechat-1
 
 ![image](./images/control.drawio.png)
 
+---
+
+1. Bert 情感分类 Api: http://127.0.0.1:81/predict, 输入 Json 数据并用 "text" 传递
+
+2. LLM 大语言模型 Api: ws://127.0.0.1:82/ws, 这一部分有专门的 Api 控制
+
+3. 主控制程序 Api: http://127.0.0.1:83/, 这一部分用于获取弹幕信息并控制各种 HTTP 服务
+
+4. STT 语音转文字 Api: http://127.0.0.1:9977/api, 固定写法
+
+---
+
 首先我们启动我们的后端服务（stt 服务、DeepSeek 服务）
 
 ```

@@ -82,7 +82,7 @@ async def chat_deepseek(question:str='', prompt_path=os.path.join('prompts', 'pr
                 response = await websocket.recv()
                 long_string += response
                 
-                if len(long_string) > 1000:
+                if len(long_string) > 50:
                     print("数据超长")
                     raise Exception("数据超长")
         except ConnectionClosedOK:
@@ -99,6 +99,12 @@ def chat(question:str=''):
     流式访问 DeepSeek 封装函数
     '''
     return asyncio.get_event_loop().run_until_complete(chat_deepseek(question))
+
+async def chat_async(question:str=''):
+    '''
+    异步流式访问 DeepSeek 封装函数
+    '''
+    return await chat_deepseek(question) 
 
 def request_deepseek(pf:pd.DataFrame):
     '''

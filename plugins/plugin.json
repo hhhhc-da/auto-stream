@@ -1,0 +1,8 @@
+{
+  "name": "自动化直播插件转发插件",
+  "version": "1.0.0",
+  "author": "Nanoka",
+  "description": "将收到的信息转发给后端 API",
+  "run": "transport.exe --url http://127.0.0.1:83/text",
+  "enabled": true
+}

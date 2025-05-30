@@ -15,12 +15,12 @@ import numpy as np
 from transformers import BertTokenizer, BertConfig, BertForSequenceClassification
 
 class BertClassifierModule():
-    def __init__(self, num_labels=2, dropout_prop=0.3, device='cuda:0' if torch.cuda.is_available() else 'cpu', pretraind_path=os.path.join('models', 'bert-chinese')):
+    def __init__(self, num_labels=2, dropout_prop=0.3, device='cuda:0' if torch.cuda.is_available() else 'cpu', pretraind_path=os.path.abspath(os.path.join('bert-chinese'))):
         # 获取 Bert 的 Tokenizer
         self.tokenizer = BertTokenizer.from_pretrained(pretraind_path)
         # 获取 Bert 的模型结构
-        self.config = BertConfig.from_pretrained("bert-chinese", num_labels=num_labels, hidden_dropout_prob=dropout_prop)
-        self.model = BertForSequenceClassification.from_pretrained("bert-chinese", config=self.config).to(device)
+        self.config = BertConfig.from_pretrained(pretraind_path, num_labels=num_labels, hidden_dropout_prob=dropout_prop)
+        self.model = BertForSequenceClassification.from_pretrained(pretraind_path, config=self.config).to(device)
         print('模型结构:', self.model, '\n')
         
     def get_model(self):
@@ -34,12 +34,12 @@ class BertClassifierModule():
     
 def parse_opt():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--episode', '--epoch', type=int, default=5, help='训练次数')
+    parser.add_argument('--episode', '--epoch', type=int, default=30, help='训练次数')
     parser.add_argument('--batch_size', type=int, default=32, help='每次训练送入的批量数')
     parser.add_argument('--max_len', type=int, default=50, help='句子的最大长度')
     parser.add_argument('--learning_rate', type=float, default=2e-5, help='学习步长（不是越大越好！！）')
-    parser.add_argument('--num_labels', type=int, default=6, help='BERT 的参数，表示最后输出特征数')
-    parser.add_argument('--dataset', type=str, default=os.path.join('dataset', 'aim', 'sampled_label.txt'), help='读取的文本位置')
+    parser.add_argument('--num_labels', type=int, default=2, help='BERT 的参数，表示最后输出特征数')
+    parser.add_argument('--dataset', type=str, default=os.path.join('dataset', 'stream', 'sampled_label.txt'), help='读取的文本位置')
     parser.add_argument('--weight_decay', type=float, default=1e-2, help='衰减率（不是越小越好！！）')
     parser.add_argument('--dropout_prop', '--dropout', '--drop', nargs='+', type=int, default=0.3, help='丢弃率（不是越小越好！！）')
     parser.add_argument('--pretraind_path', type=str, default='bert-chinese', help='预训练参数路径')
@@ -78,12 +78,8 @@ def train_bert_model(
     ad_labels = []
 
     label_dict = {
-        "冗余信息": 0,
-        "推销广告": 1,
-        "学习人员": 2,
-        "从业人员": 3,
-        "实际用户": 4,
-        "需求用户": 5
+        "daily": 0,
+        "wink": 1,
     }
     # 反转字典
     type_dict = {}
@@ -188,7 +184,18 @@ def train_bert_model(
         })
         f.write("测试案例:\n" + str(pf) + "\n")
         print(pf)
-        pf.to_csv(os.path.join("dataset", 'valid.txt'), index=False, encoding='utf-8')
+        
+        with pd.ExcelWriter(os.path.join("dataset", "valid.xlsx"), 'openpyxl') as writer:
+            sheet_name = 'Val'
+            pf.to_excel(writer, index=False, sheet_name=sheet_name)
+            
+            # 获取工作簿和工作表对象
+            workbook  = writer.book
+            worksheet = workbook[sheet_name]
+            # 设置列宽
+            worksheet.column_dimensions['A'].width = 20
+            worksheet.column_dimensions['B'].width = 20
+            worksheet.column_dimensions['C'].width = 50
         
     # 创建子图
     fig, axes = plt.subplots(1, 1, figsize=(6, 5))
@@ -256,12 +263,8 @@ def run_bert_model(
     tokenizer = bert_model.get_tokenizer()
 
     label_dict = {
-        "冗余信息": 0,
-        "推销广告": 1,
-        "学习人员": 2,
-        "从业人员": 3,
-        "实际用户": 4,
-        "需求用户": 5
+        "daily": 0,
+        "wink": 1,
     }
     # 反转字典
     type_dict = {}

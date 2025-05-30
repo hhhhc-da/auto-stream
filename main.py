@@ -1,67 +1,88 @@
-#coing=utf-8
-import sounddevice as sd
-import numpy as np
-from scipy.io.wavfile import write
-import io
+from fastapi import FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 import os
-import uuid
-from pydub import AudioSegment
+import uvicorn
+import json
+import requests
+import pyautogui
+import sounddevice as sd
+import websockets
+from websockets.exceptions import ConnectionClosedOK
+import asyncio
 
-from modules.voice_trans import voice_recognition_from_file
-from modules.voice_gen import advanced_generate_voice, save_audio_to_mp3
-from modules.llm_server import chat
+from modules.voice_gen import advanced_generate_voice
 
-def record_microphone(duration=5, fs=44100, output_path=os.path.join('record', f'record_{uuid.uuid1()}.mp3')):
-    """
-    录制系统麦克风的音频并返回 WAV 字节流
-    """
-    print(f"开始录制 {duration} 秒...")
-    recording = sd.rec(int(duration * fs), samplerate=fs, channels=2)
-    sd.wait()  # 等待录音完成
-    print("录制完成")
-    
-    # 创建内存中的文件对象
-    with io.BytesIO() as f:
-        # 将录音数据写入内存文件
-        write(f, fs, np.int16(recording * 32767))
-        # 获取字节流
-        wav_bytes = f.getvalue()
-        
-    # 从字节流加载音频
-    audio = AudioSegment.from_wav(io.BytesIO(wav_bytes))
-    
-    # 导出为MP3
-    audio.export(output_path, format="mp3")
-    print(f"已保存MP3文件: {output_path}")
-    return output_path
+app = FastAPI()
 
-if __name__ == "__main__":
-    # 设置录制参数
-    duration = 5  # 录制10秒
+origins = []
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
+
+async def chat_deepseek(question:str='', prompt_path=os.path.join('prompts', 'prompt.txt'), encoding='utf-8'):
+    '''
+    WebSockets 流式访问函数
+    '''
+    uri = "ws://localhost:82/ws"
+    async with websockets.connect(uri) as websocket:
+        long_string = ""
+
+        message = ''
+        with open(prompt_path, "r", encoding=encoding) as f:
+            message = f.read()
+            
+        message += "网友:" + question + "\n回复:"
+        await websocket.send(message)
+
+        try:
+            while True:
+                response = await websocket.recv()
+                long_string += response
+                
+                if len(long_string) > 50:
+                    print("数据超长")
+                    raise Exception("数据超长")
+        except ConnectionClosedOK:
+            # print("Server closed the connection normally.")
+            pass
+        except Exception as e:
+            websocket.close()
+            print("Exception:", e)
+        finally:
+            return long_string
+
+async def chat_async(question:str=''):
+    '''
+    异步流式访问 DeepSeek 封装函数
+    '''
+    return await chat_deepseek(question) 
+
+@app.post("/text")
+async def receive(request: Request):
+    data = await request.json()
+    text = json.loads(data)["text"]
     
-    # 执行录制
-    audio_path = record_microphone(duration)
+    response = requests.post('http://127.0.0.1:81/predict', json=json.dumps({"text": text}))
+    if response.status_code != 200:
+        return {"error": "Failed to send text to prediction service"}
     
-    # 语音转文字
-    try:
-        text = voice_recognition_from_file(audio_path)
-        print(f"识别结果: {text}")
-    except Exception as e:
-        print(f"语音识别失败: {e}")
-    finally:
-        # 删除录音文件
-        if os.path.exists(audio_path):
-            os.remove(audio_path)
-            print(f"已删除录音文件: {audio_path}")
-        
+    emoji = response.json()["type"]
+    if emoji != 'daily':
+        print(f"(Log) Received emoji: {emoji}, press SHIFT + F.")
+        pyautogui.press(['shift', 'f'])
+    else:
+        print("(Log) No emoji detected, no action taken.")
+    
     # 使用 DeepSeek 自动回复
     try:
-        response = chat(question=text)
-        print(f"DeepSeek 回复: {response}")
+        response = await chat_async(question=text)
     except Exception as e:
-        print(f"DeepSeek 自动回复失败: {e}")
+        print(f"DeepSeekChatError: {e}")
         
-    # 将生成的文字转换为语音    
     try:
         if os.path.exists("audio") is False:
             os.makedirs("audio")    
@@ -69,8 +90,14 @@ if __name__ == "__main__":
             for file in os.listdir("audio"):
                 os.remove(os.path.join("audio", file))
         
-        wavs = advanced_generate_voice([response], temperature=0.3, top_P=0.7, top_K=20, prompt='[oral_2][laugh_0][break_2]')
-        save_audio_to_mp3(wavs[0])
-        print("语音生成成功, 已保存为 MP3 文件")
+        wavs = advanced_generate_voice([response], temperature=0.3, top_P=0.7, top_K=20, prompt='[laugh_1]')
+        sd.play(wavs[0], samplerate=24000)
+
     except Exception as e:
         print(f"语音生成失败: {e}")
+
+    return json.dumps({"status": "success", "message": "Text received and processed"})
+
+if __name__ == "__main__":
+    # 启动 FastAPI 服务
+    uvicorn.run('main:app', host='0.0.0.0', port=83)
